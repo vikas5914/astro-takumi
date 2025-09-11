@@ -1,17 +1,20 @@
 import type { RenderFunctionInput } from "../types.js";
 const { twj } = await import("tw-to-css");
+import { fetchImage } from "../util.js";
 
 // from https://fullstackheroes.com/resources/vercel-og-templates/podcast/
 export async function podcast({ title }: RenderFunctionInput): Promise<React.ReactNode> {
-  const image = "https://static.wikia.nocookie.net/arresteddevelopment/images/4/42/5x15_-_Michael_Bluth_01.jpg";
+  const image = await fetchImage(
+    "https://static.wikia.nocookie.net/arresteddevelopment/images/4/42/5x15_-_Michael_Bluth_01.jpg",
+  );
 
   return Promise.resolve(
-    <div style={twj("h-full w-full flex items-start justify-start bg-yellow-100 p-20")}> 
-      <div style={twj("flex h-full items-center w-full")}> 
-        <div style={twj("flex-1 flex flex-col mr-20")}> 
+    <div style={twj("h-full w-full flex items-start justify-start bg-yellow-100 p-20")}>
+      <div style={twj("flex h-full items-center w-full")}>
+        <div style={twj("flex-1 flex flex-col mr-20")}>
           <h1 style={twj("text-[60px] m-0")}>{title}</h1>
         </div>
-        <div style={twj("flex relative")}> 
+        <div style={twj("flex relative")}>
           <svg
             style={twj("absolute -top-[300px] -left-[100px] opacity-20")}
             id="visual"
@@ -27,7 +30,7 @@ export async function podcast({ title }: RenderFunctionInput): Promise<React.Rea
               ></path>
             </g>
           </svg>
-          <img style={{ ...twj("mx-auto border-8 border-red-500 w-[300px] h-[300px] rounded-full"), ...{ objectFit: "cover" } }} src={image} />
+          <img style={{ ...twj("mx-auto w-[300px] h-[300px] rounded-full"), ...{ objectFit: "cover" } }} src={image} />
         </div>
       </div>
     </div>,

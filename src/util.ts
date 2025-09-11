@@ -45,3 +45,16 @@ export function getImagePath({ url, site }: { url: URL; site: URL | undefined })
 
   return target;
 }
+
+async function createObjectURL(blob: Blob) {
+  return `data:${blob.type};base64,${btoa(
+    (await blob.bytes()).reduce((data, byte) => data + String.fromCharCode(byte), ""),
+  )}`;
+}
+
+export async function fetchImage(url: string): Promise<string> {
+  const response = await fetch(url);
+  const blob = await response.blob();
+
+  return createObjectURL(blob);
+}

@@ -11,7 +11,7 @@ export async function rauchg({ title }: RenderFunctionInput): Promise<React.Reac
         justifyContent: "center",
         letterSpacing: "-.02em",
         fontWeight: 700,
-        background: "white",
+        backgroundColor: "white",
       }}
     >
       <div
@@ -27,7 +27,7 @@ export async function rauchg({ title }: RenderFunctionInput): Promise<React.Reac
           style={{
             width: 24,
             height: 24,
-            background: "black",
+            backgroundColor: "black",
           }}
         />
         <span

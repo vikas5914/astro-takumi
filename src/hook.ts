@@ -19,7 +19,6 @@ export async function buildDoneHook({
   options: IntegrationOptions;
   render: RenderFunction;
 }) {
-
   logger.info("Generating Open Graph images using Takumi");
 
   const renderer = new Renderer({
@@ -40,7 +39,6 @@ interface HandlePageInput {
 }
 
 async function handlePage({ page, options, render, dir, logger, renderer }: HandlePageInput) {
-
   // gets the absolute path to the HTML file. E.g. /home/user/project/dist/blog/index.html
   // fileURLToPath() converts the URL to a file path. Without it, the path would start with a leading slash on Windows
   // systems, resulting in an invalid path.
@@ -55,13 +53,13 @@ async function handlePage({ page, options, render, dir, logger, renderer }: Hand
 
   // render the image using Satori and Resvg
   const reactNode = await render({ ...page, ...pageDetails, dir, document });
-  const node  = await fromJsx(reactNode);
+  const node = await fromJsx(reactNode);
   const png = await renderer.renderAsync(node, {
     width: 1200,
     height: 630,
-   format: "png",
-   quality: 100,
- });;
+    format: "png",
+    quality: 100,
+  });
 
   // save the image as a PNG file. The file name is the same as the HTML file, but with a .png extension.
   const pngFile = htmlFile.replace(/\.html$/, ".png");
