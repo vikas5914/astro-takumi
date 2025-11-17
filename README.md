@@ -23,7 +23,7 @@ You've probably seen this in action when posting a link on Facebook, Twitter, Sl
 - Written in TypeScript
 - Generate Open Graph images for every page on your site.
 - Use a preset renderer to get started quickly.
-- Images are fully customizable using [Takumi](https://github.com/takumi-rs/takumi).
+- Images are fully customizable using [Takumi](https://github.com/kane50613/takumi).
 - Use React/JSX + Tailwind syntax or vanilla JavaScript to define your own custom images.
 - Supports both static pages and Astro content collections.
 - Pages can be written in Markdown, MDX, HTML, or any other format.
