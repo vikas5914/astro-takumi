@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/vikas5914/astro-takumi/compare/v1.0.0...v1.0.1) (2025-11-17)
+
+
+### Bug Fixes
+
+* 2 ([7074dc5](https://github.com/vikas5914/astro-takumi/commit/7074dc554211b2be008f93cca94fe567113f088a))
+
 ## 1.0.0 (2025-09-12)
 
 

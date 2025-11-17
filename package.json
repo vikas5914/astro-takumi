@@ -16,7 +16,7 @@
     "url": "https://github.com/vikas5914/astro-takumi/issues"
   },
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scripts": {
     "prepare": "husky",
     "lint": "eslint src --cache",
