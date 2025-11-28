@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/vikas5914/astro-takumi/compare/v1.1.0...v1.1.1) (2025-11-28)
+
+
+### Bug Fixes
+
+* use npm ([de01070](https://github.com/vikas5914/astro-takumi/commit/de01070941bc0cc9d395a965dbe4bc95edb470ee))
+
 ## [1.1.0](https://github.com/vikas5914/astro-takumi/compare/v1.0.1...v1.1.0) (2025-11-28)
 
 
