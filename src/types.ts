@@ -11,20 +11,24 @@ export interface IntegrationInput {
 export interface IntegrationDefaults {
   width: number;
   height: number;
+  format: "png" | "webp" | "jpeg" | "avif";
+  quality: number;
   verbose: boolean;
+  drawDebugBorder: boolean;
 }
 
 /**
  * IntegrationOptions with some optional properties. This is what we expose to the user. It allows us to
  * merge the defaults with the user's options and ensure that all required properties are present.
  */
-export type PartialIntegrationOptions = Omit<ConstructRendererOptions, "height" | "width"> & Partial<IntegrationDefaults>;
+export type PartialIntegrationOptions = Omit<ConstructRendererOptions, "height" | "width"> &
+  Partial<IntegrationDefaults>;
 
 /**
  * The options that we use internally. This ensures that all options are configured, either with something
  * the user provided or with a default value.
  */
-export type IntegrationOptions = PartialIntegrationOptions & IntegrationDefaults;
+export type IntegrationOptions = Omit<PartialIntegrationOptions, keyof IntegrationDefaults> & IntegrationDefaults;
 
 /** This is the page data passed in by Astro */
 export interface Page {

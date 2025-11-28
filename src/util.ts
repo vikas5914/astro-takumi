@@ -14,7 +14,15 @@ export function getFilePath({ dir, page }: { dir: string; page: string }) {
   return target;
 }
 
-export function getImagePath({ url, site }: { url: URL; site: URL | undefined }): string {
+export function getImagePath({
+  url,
+  site,
+  format = "png",
+}: {
+  url: URL;
+  site: URL | undefined;
+  format?: "png" | "webp" | "jpeg" | "avif";
+}): string {
   if (!site) {
     throw new Error(
       "`site` must be set in your Astro configuration: https://docs.astro.build/en/reference/configuration-reference/#site",
@@ -24,18 +32,18 @@ export function getImagePath({ url, site }: { url: URL; site: URL | undefined })
   let target = url.pathname;
 
   // if url ends with a slash, it's a directory
-  // add index.png to the end
+  // add index.<format> to the end
   if (target.endsWith("/")) {
-    target = target + "index.png";
+    target = target + `index.${format}`;
   } else {
-    target = target + ".png";
+    target = target + `.${format}`;
   }
 
   // Astro creates these as top-level files rather than in a folder
-  if (target === "/404/index.png") {
-    return site.toString() + "404.png";
-  } else if (target === "/500/index.png") {
-    return site.toString() + "500.png";
+  if (target === `/404/index.${format}`) {
+    return site.toString() + `404.${format}`;
+  } else if (target === `/500/index.${format}`) {
+    return site.toString() + `500.${format}`;
   }
 
   // remove leading slash

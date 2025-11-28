@@ -24,6 +24,8 @@ You've probably seen this in action when posting a link on Facebook, Twitter, Sl
 - Generate Open Graph images for every page on your site.
 - Use a preset renderer to get started quickly.
 - Images are fully customizable using [Takumi](https://github.com/kane50613/takumi).
+- **Built-in Tailwind CSS support** - Use `tw` prop directly in JSX.
+- Multiple output formats: PNG, WebP, JPEG, AVIF.
 - Use React/JSX + Tailwind syntax or vanilla JavaScript to define your own custom images.
 - Supports both static pages and Astro content collections.
 - Pages can be written in Markdown, MDX, HTML, or any other format.
@@ -31,7 +33,6 @@ You've probably seen this in action when posting a link on Facebook, Twitter, Sl
 ## Quick Start
 
 1. Add this integration to your Astro config:
-
    - Option 1: use the `astro` command:
 
      ```bash
@@ -62,11 +63,11 @@ You've probably seen this in action when posting a link on Facebook, Twitter, Sl
 
 1. Install the fonts you want to use. Fonts must be explicitly declared to be used for images. System fonts are _not_ available. For this quick start guide, we'll install the [Roboto](https://fontsource.org/fonts/roboto) font:
 
-    ```bash
-    npm i @fontsource/roboto
-    ```
+   ```bash
+   npm i @fontsource/roboto
+   ```
 
-    You can find more fonts on [Fontsource](https://fontsource.org/), or you can use any font file that you have. Pass font files as Buffers to Takumi.
+   You can find more fonts on [Fontsource](https://fontsource.org/), or you can use any font file that you have. Pass font files as Buffers to Takumi.
 
 1. Configure the integration in your Astro config:
 
@@ -112,20 +113,18 @@ You've probably seen this in action when posting a link on Facebook, Twitter, Sl
 1. Update your main Astro layout with the appropriate `meta` tags. The [Open Graph site](https://ogp.me/) has more information possible tags.
 
    The following `meta` tags must be defined:
-
-   * `og:title`
-     * This field may be used when generating images.
-   * `og:type`
-     * See the [Open Graph documentation](https://ogp.me/#types) for valid values.
-   * `og:image`
-     * Set this to the return value of `getImagePath` (example shown below).
-     * If the value of `og:image` does not match what this integration expects then your site will fail to build. This will ensure your site is correctly configured to display Open Graph images.
-   * `og:description`
-     * Optional. This field may be used when generating images.
+   - `og:title`
+     - This field may be used when generating images.
+   - `og:type`
+     - See the [Open Graph documentation](https://ogp.me/#types) for valid values.
+   - `og:image`
+     - Set this to the return value of `getImagePath` (example shown below).
+     - If the value of `og:image` does not match what this integration expects then your site will fail to build. This will ensure your site is correctly configured to display Open Graph images.
+   - `og:description`
+     - Optional. This field may be used when generating images.
 
    Your site will fail to build if the tags above are not set.
-
-   * Option 1: Use the [`astro-seo`](https://github.com/jonasmerlin/astro-seo) package:
+   - Option 1: Use the [`astro-seo`](https://github.com/jonasmerlin/astro-seo) package:
 
      Install the `astro-seo` package:
 
@@ -181,14 +180,71 @@ You've probably seen this in action when posting a link on Facebook, Twitter, Sl
      </html>
      ```
 
-   * Option 2: Manually add the `meta` tags to your Astro layout.
+   - Option 2: Manually add the `meta` tags to your Astro layout.
 
-1. Build your site. You should see a `.png` file next to each `.html` page in your `dist` folder. Double-check that the `og:image` proprety in your `.html` file matches the path to the `.png` file.
+1. Build your site. You should see an image file (`.png` by default) next to each `.html` page in your `dist` folder. Double-check that the `og:image` property in your `.html` file matches the path to the image file.
 
 1. Deploy your site. You can verify that your images are correct by:
+   - Sending a link to your site in an application that supports Open Graph like iMessage, Slack, Discord, etc.
+   - Visit [opengraph.xyz](http://opengraph.xyz/) and test your site.
 
-    * Sending a link to your site in an application that supports Open Graph like iMessage, Slack, Discord, etc.
-   * Visit [opengraph.xyz](http://opengraph.xyz/) and test your site.
+## Configuration
+
+The integration accepts the following options:
+
+```ts
+astroTakumi({
+  options: {
+    // Required: fonts to use for rendering text
+    fonts: [fs.readFileSync("node_modules/@fontsource/roboto/files/roboto-latin-400-normal.woff")],
+
+    // Image dimensions (default: 1200x630)
+    width: 1200,
+    height: 630,
+
+    // Output format: "png" | "webp" | "jpeg" | "avif" (default: "png")
+    // WebP is recommended for better compression
+    format: "webp",
+
+    // Image quality 0-100 (default: 100)
+    quality: 90,
+
+    // Enable debug borders to troubleshoot layouts (default: false)
+    drawDebugBorder: false,
+
+    // Log each generated image (default: false)
+    verbose: true,
+  },
+  render: presets.blackAndWhite,
+});
+```
+
+### Using WebP Format
+
+For better performance, you can use WebP format which offers smaller file sizes:
+
+```ts
+import astroTakumi, { presets, getImagePath } from "astro-takumi";
+
+export default defineConfig({
+  integrations: [
+    astroTakumi({
+      options: {
+        format: "webp",
+        quality: 85,
+        fonts: [...],
+      },
+      render: presets.blackAndWhite,
+    }),
+  ],
+});
+```
+
+Update your layout to use the correct format:
+
+```ts
+const openGraphImageUrl = getImagePath({ url, site, format: "webp" });
+```
 
 ## Examples
 
@@ -206,20 +262,20 @@ You can create your own custom images with a render function. Take a look at how
 
 Renderers have access to the page's DOM using [jsdom](https://github.com/jsdom/jsdom). You can use this to render your Open Graph image using any of the content from the associated HTML page. An example of this is shown in the [custom property preset](https://github.com/vikas5914/astro-takumi/blob/main/src/presets/customProperty.tsx) which shows a preview of the page's body text in the Open Graph image.
 
-This library uses [Takumi](https://github.com/takumi-rs/takumi) to render React/JSX directly to PNG.
+This library uses [Takumi](https://github.com/kane50613/takumi) to render React/JSX directly to images.
 
 > [!TIP]
-> You can use Tailwind syntax with [tw-to-css](https://github.com/vinicoder/tw-to-css). An example is the [Tailwind preset](https://github.com/vikas5914/astro-takumi/blob/main/src/presets/tailwind.tsx). You'll need to install this package yourself.
+> Takumi has **built-in Tailwind CSS support**! Simply use the `tw` prop on any element:
+>
+> ```tsx
+> <div tw="flex items-center justify-center bg-white text-4xl font-bold">{title}</div>
+> ```
 
 ## Presets
 
 Presets are located in [`src/presets/`](https://github.com/vikas5914/astro-takumi/tree/main/src/presets). [Open a pull request](https://github.com/vikas5914/astro-takumi/compare) to contribute a preset you've created.
 
-Note: some presets use the [`tw-to-css`](https://github.com/vinicoder/tw-to-css) library. You'll need to install this dependency separately when using one of these presets. You'll see an error if the library is not already installed.
-
-```bash
-npm i tw-to-css
-```
+All presets use Takumi's built-in Tailwind CSS support via the `tw` prop - no additional dependencies required!
 
 ### `backgroundImage`
 
@@ -381,9 +437,6 @@ export default defineConfig({
 
 ![](assets/presets/waveSvg.png)
 
-
-
 ## Acknowledgment
 
-Based on the excellent work done in the [takumi](https://github.com/kane50613/takumi) project and the [astro-opengraph-images](https://github.com/shepherdjerred/astro-opengraph-images) project.
-
+Based on the excellent work done in the [Takumi](https://github.com/kane50613/takumi) project and the [astro-opengraph-images](https://github.com/shepherdjerred/astro-opengraph-images) project.

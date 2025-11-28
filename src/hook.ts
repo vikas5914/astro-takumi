@@ -51,35 +51,36 @@ async function handlePage({ page, options, render, dir, logger, renderer }: Hand
   // extract the OpenGraph properties from the HTML file
   const pageDetails = extract(document);
 
-  // render the image using Satori and Resvg
+  // render the image using Takumi
   const reactNode = await render({ ...page, ...pageDetails, dir, document });
   const node = await fromJsx(reactNode);
-  const png = await renderer.renderAsync(node, {
-    width: 1200,
-    height: 630,
-    format: "png",
-    quality: 100,
+  const imageBuffer = await renderer.render(node, {
+    width: options.width,
+    height: options.height,
+    format: options.format,
+    quality: options.quality,
+    drawDebugBorder: options.drawDebugBorder,
   });
 
-  // save the image as a PNG file. The file name is the same as the HTML file, but with a .png extension.
-  const pngFile = htmlFile.replace(/\.html$/, ".png");
-  await fs.writeFile(pngFile, png);
+  // save the image file. The file name is the same as the HTML file, but with the appropriate extension.
+  const imageFile = htmlFile.replace(/\.html$/, `.${options.format}`);
+  await fs.writeFile(imageFile, imageBuffer);
 
-  // get the relative filesystem path to the PNG file from the output directory. E.g. blog/index.png
+  // get the relative filesystem path to the image file from the output directory. E.g. blog/index.webp
   // path.relative() returns the relative path from the first argument to the second argument.
-  const relativePngFile = path.relative(fileURLToPath(dir), pngFile).replace(/\\/g, "/");
+  const relativeImageFile = path.relative(fileURLToPath(dir), imageFile).replace(/\\/g, "/");
 
   // convert the image path to a URL and remove the leading slash
   const imageUrl = new URL(pageDetails.image).pathname.slice(1);
 
   // check that the og:image property matches the sitePath
-  if (imageUrl !== relativePngFile) {
+  if (imageUrl !== relativeImageFile) {
     throw new Error(
-      `The og:image property in ${htmlFile} (${imageUrl}) does not match the generated image (${relativePngFile}).`,
+      `The og:image property in ${htmlFile} (${imageUrl}) does not match the generated image (${relativeImageFile}).`,
     );
   }
 
   if (options.verbose) {
-    logger.info(`Generated ${relativePngFile} for ${htmlFile}.`);
+    logger.info(`Generated ${relativeImageFile} for ${htmlFile}.`);
   }
 }
