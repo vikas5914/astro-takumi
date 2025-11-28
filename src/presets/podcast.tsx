@@ -1,5 +1,4 @@
 import type { RenderFunctionInput } from "../types.js";
-const { twj } = await import("tw-to-css");
 import { fetchImage } from "../util.js";
 
 // from https://fullstackheroes.com/resources/vercel-og-templates/podcast/
@@ -9,14 +8,14 @@ export async function podcast({ title }: RenderFunctionInput): Promise<React.Rea
   );
 
   return Promise.resolve(
-    <div style={twj("h-full w-full flex items-start justify-start bg-yellow-100 p-20")}>
-      <div style={twj("flex h-full items-center w-full")}>
-        <div style={twj("flex-1 flex flex-col mr-20")}>
-          <h1 style={twj("text-[60px] m-0")}>{title}</h1>
+    <div tw="h-full w-full flex items-start justify-start bg-yellow-100 p-20">
+      <div tw="flex h-full items-center w-full">
+        <div tw="flex-1 flex flex-col mr-20">
+          <h1 tw="text-[60px] m-0">{title}</h1>
         </div>
-        <div style={twj("flex relative")}>
+        <div tw="flex relative">
           <svg
-            style={twj("absolute -top-[300px] -left-[100px] opacity-20")}
+            tw="absolute -top-[300px] -left-[100px] opacity-20"
             id="visual"
             viewBox="0 0 900 600"
             width="900"
@@ -30,7 +29,7 @@ export async function podcast({ title }: RenderFunctionInput): Promise<React.Rea
               ></path>
             </g>
           </svg>
-          <img style={{ ...twj("mx-auto w-[300px] h-[300px] rounded-full"), ...{ objectFit: "cover" } }} src={image} />
+          <img tw="mx-auto w-[300px] h-[300px] rounded-full" style={{ objectFit: "cover" }} src={image} />
         </div>
       </div>
     </div>,

@@ -5,7 +5,10 @@ import { buildDoneHook } from "./hook.js";
 const defaults: IntegrationDefaults = {
   width: 1200,
   height: 630,
+  format: "png",
+  quality: 100,
   verbose: false,
+  drawDebugBorder: false,
 };
 
 export function astroTakumi({ options, render }: IntegrationInput): AstroIntegration {
