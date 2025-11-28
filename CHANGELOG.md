@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/vikas5914/astro-takumi/compare/v1.0.1...v2.0.0) (2025-11-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* None - all changes are backward compatible
+
+### Miscellaneous Chores
+
+* migrate to Takumi 0.55.x with built-in Tailwind support ([cba2f7b](https://github.com/vikas5914/astro-takumi/commit/cba2f7bfa3973e16d9a9e50213651f7d1f358f27))
+
 ## [1.0.1](https://github.com/vikas5914/astro-takumi/compare/v1.0.0...v1.0.1) (2025-11-17)
 
 
