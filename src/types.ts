@@ -1,6 +1,6 @@
 import type { BaseIntegrationHooks } from "astro";
 import type { ReactNode } from "react";
-import type { ConstructRendererOptions } from "@takumi-rs/core";
+import type { ConstructRendererOptions, OutputFormat } from "@takumi-rs/core";
 
 export interface IntegrationInput {
   options: PartialIntegrationOptions;
@@ -11,7 +11,7 @@ export interface IntegrationInput {
 export interface IntegrationDefaults {
   width: number;
   height: number;
-  format: "png" | "webp" | "jpeg" | "avif";
+  format: OutputFormat;
   quality: number;
   verbose: boolean;
   drawDebugBorder: boolean;
