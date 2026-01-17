@@ -4,6 +4,7 @@ on:
       - master
 name: release-please
 permissions:
+  id-token: write
   contents: write
   pull-requests: write
 jobs:
