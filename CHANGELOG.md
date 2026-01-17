@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.3](https://github.com/vikas5914/astro-takumi/compare/v1.1.2...v1.1.3) (2026-01-17)
+
+
+### Bug Fixes
+
+* use OutputFormat type ([522ae68](https://github.com/vikas5914/astro-takumi/commit/522ae68435def504dd89835a0c0f7487f1d6d74f))
+
 ## [1.1.2](https://github.com/vikas5914/astro-takumi/compare/v1.1.1...v1.1.2) (2026-01-17)
 
 
