@@ -1,0 +1,62 @@
+name: Release
+permissions: {}
+
+on:
+  push:
+    branches:
+      - master
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check for unreleased changesets
+        id: has-changesets
+        uses: andstor/file-existence-action@v3
+        with:
+          files: ".changeset/!(README).md"
+
+      # If there are unreleased changesets, validate the project before creating the changesets PR
+      - name: Require build, test and lint to pass
+        if: steps.has-changesets.outputs.files_exists == 'true'
+        run: |
+          npm run build
+          npm test
+          npm run lint
+
+      # Run changesets action either if there are unreleased changesets (= a PR must be created)
+      # or if the commit message matches the release PR (= new versions must be published to NPM)
+      - name: Create changesets PR or publish to NPM
+        id: changesets
+        if: steps.has-changesets.outputs.files_exists == 'true' || startsWith(github.event.head_commit.message, '[CI] Release')
+        uses: changesets/action@v1
+        with:
+          title: "[CI] Release"
+          commit: "[CI] Release"
+          version: "npm run ci-version"
+          publish: "npm run ci-publish"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ""
