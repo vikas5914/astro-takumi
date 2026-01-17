@@ -12,8 +12,8 @@
   },
   "main": "dist/index.js",
   "dependencies": {
-    "@takumi-rs/core": "^0.55.2",
-    "@takumi-rs/helpers": "^0.55.2",
+    "@takumi-rs/core": "^0.62.8",
+    "@takumi-rs/helpers": "^0.62.8",
     "jsdom": "^27.2.0",
     "react": "^19.2.0"
   },
@@ -25,7 +25,7 @@
     "@tsconfig/node20": "^20.1.8",
     "@tsconfig/strictest": "^2.0.8",
     "@types/jsdom": "^27.0.0",
-    "@types/node": "^24.10.1",
+    "@types/node": "^25.0.9",
     "@types/react": "^19.2.7",
     "astro": "^5.16.2",
     "eslint": "^9.39.1",
