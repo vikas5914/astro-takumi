@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.4](https://github.com/vikas5914/astro-takumi/compare/v1.1.3...v1.1.4) (2026-01-17)
+
+
+### Bug Fixes
+
+* fix typescript issue ([4125289](https://github.com/vikas5914/astro-takumi/commit/4125289e3f5f74a588f72fd19c2bdc2ba7eec405))
+
 ## [1.1.3](https://github.com/vikas5914/astro-takumi/compare/v1.1.2...v1.1.3) (2026-01-17)
 
 
