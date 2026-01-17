@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/vikas5914/astro-takumi/compare/v1.1.1...v1.1.2) (2026-01-17)
+
+
+### Bug Fixes
+
+* update dependencies ([2ad9017](https://github.com/vikas5914/astro-takumi/commit/2ad9017f7b79c75ea406982523dabc13bb712b7b))
+
 ## [1.1.1](https://github.com/vikas5914/astro-takumi/compare/v1.1.0...v1.1.1) (2025-11-28)
 
 
