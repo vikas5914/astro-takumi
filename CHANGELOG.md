@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.6](https://github.com/vikas5914/astro-takumi/compare/v1.1.5...v1.1.6) (2026-01-17)
+
+
+### Bug Fixes
+
+* npm auth ([a6fec46](https://github.com/vikas5914/astro-takumi/commit/a6fec4686abdcac03ac656ebab36cba817aeeb64))
+
 ## [1.1.5](https://github.com/vikas5914/astro-takumi/compare/v1.1.4...v1.1.5) (2026-01-17)
 
 
