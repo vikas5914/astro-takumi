@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.9
+
+### Patch Changes
+
+- 973e70d: update deps
+
 ## 1.1.8
 
 ### Patch Changes
