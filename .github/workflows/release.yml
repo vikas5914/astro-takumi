@@ -51,7 +51,7 @@ jobs:
       - name: Create changesets PR or publish to NPM
         id: changesets
         if: steps.has-changesets.outputs.files_exists == 'true' || startsWith(github.event.head_commit.message, '[CI] Release')
-        uses: changesets/action@v1
+        uses: changesets/action@e0145edc7d9d8679003495b11f87bd8ef63c0cba # v1.5.3
         with:
           title: "[CI] Release"
           commit: "[CI] Release"

@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/vikas5914/astro-takumi.git"
+    "url": "git+https://github.com/vikas5914/astro-takumi.git"
   },
   "main": "dist/index.js",
   "dependencies": {
