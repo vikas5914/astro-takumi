@@ -1,5 +1,4 @@
 on:
-  workflow_dispatch:
   push:
     branches:
       - master
@@ -19,6 +18,8 @@ jobs:
       - uses: actions/checkout@v4
         if: ${{ steps.release.outputs.release_created }}
       - uses: actions/setup-node@v4
+        with:
+          node-version: 20
         if: ${{ steps.release.outputs.release_created }}
       - run: npm ci
         if: ${{ steps.release.outputs.release_created }}
@@ -28,7 +29,5 @@ jobs:
         if: ${{ steps.release.outputs.release_created }}
       - run: npm test
         if: ${{ steps.release.outputs.release_created }}
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish --provenance --access public
         if: ${{ steps.release.outputs.release_created }}
