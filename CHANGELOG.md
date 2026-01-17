@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.7](https://github.com/vikas5914/astro-takumi/compare/v1.1.6...v1.1.7) (2026-01-17)
+
+
+### Bug Fixes
+
+* github action ([e9ce626](https://github.com/vikas5914/astro-takumi/commit/e9ce626d665f894d7d84fa053cb7071a6c53752c))
+
 ## [1.1.6](https://github.com/vikas5914/astro-takumi/compare/v1.1.5...v1.1.6) (2026-01-17)
 
 
