@@ -12,8 +12,8 @@
   },
   "main": "dist/index.js",
   "dependencies": {
-    "@takumi-rs/core": "^0.64.0",
-    "@takumi-rs/helpers": "^0.64.0",
+    "@takumi-rs/core": "^0.65.0",
+    "@takumi-rs/helpers": "^0.65.0",
     "jsdom": "^27.2.0",
     "react": "^19.2.0"
   },
