@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.1.11 (2026-04-05)
+
+- ci: simplify release pipeline — replace changesets with auto-release
+
 ## 1.1.10
 
 ### Patch Changes
