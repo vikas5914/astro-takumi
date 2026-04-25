@@ -1,5 +1,29 @@
 # Changelog
 
+## v1.1.12 (2026-04-25)
+
+- feat: upgrade takumi to v1.1.2 and astro to v6
+- build(deps): bump the all-dependencies group with 2 updates (#79)
+- build(deps): bump the all-dependencies group with 3 updates (#78)
+- build(deps-dev): bump vitest in the all-dependencies group (#77)
+- build(deps): bump the all-dependencies group with 3 updates (#76)
+- build(deps): bump the all-dependencies group with 4 updates (#75)
+- build(deps): bump the all-dependencies group with 3 updates (#74)
+- build(deps): bump the all-dependencies group with 3 updates (#73)
+- build(deps-dev): bump prettier in the all-dependencies group (#72)
+- build(deps): bump the all-dependencies group with 4 updates (#71)
+- build(deps): bump the all-dependencies group with 2 updates (#70)
+- build(deps): bump the all-dependencies group with 4 updates (#69)
+- build(deps): bump the all-dependencies group with 3 updates (#68)
+- build(deps-dev): bump typescript-eslint in the all-dependencies group (#67)
+- build(deps): bump the all-dependencies group with 3 updates (#66)
+- build(deps): bump vite from 7.3.1 to 7.3.2 (#65)
+- chore: update all dependencies
+- build(deps-dev): bump h3 from 1.15.5 to 1.15.11 (#62)
+- build(deps): bump picomatch (#59)
+- build(deps): bump rollup from 4.55.1 to 4.60.1 (#63)
+- build(deps-dev): bump astro from 5.16.11 to 5.18.1 (#60)
+
 ## v1.1.11 (2026-04-05)
 
 - ci: simplify release pipeline — replace changesets with auto-release
