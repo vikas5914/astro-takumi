@@ -1,4 +1,5 @@
 import { Renderer } from "@takumi-rs/core";
+import { extractResourceUrls, fetchResources } from "@takumi-rs/helpers";
 import { fromJsx } from "@takumi-rs/helpers/jsx";
 import type { AstroBuildDoneHookInput, IntegrationOptions, Page, RenderFunction } from "./types.js";
 import * as fs from "fs/promises";
@@ -53,13 +54,16 @@ async function handlePage({ page, options, render, dir, logger, renderer }: Hand
 
   // render the image using Takumi
   const reactNode = await render({ ...page, ...pageDetails, dir, document });
-  const node = await fromJsx(reactNode);
+  const { node, stylesheets } = await fromJsx(reactNode);
+  const fetchedResources = await fetchResources(extractResourceUrls(node));
   const imageBuffer = await renderer.render(node, {
     width: options.width,
     height: options.height,
     format: options.format,
     quality: options.quality,
     drawDebugBorder: options.drawDebugBorder,
+    stylesheets,
+    fetchedResources,
   });
 
   // save the image file. The file name is the same as the HTML file, but with the appropriate extension.

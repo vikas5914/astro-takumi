@@ -10,12 +10,12 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.4",
-    "@fontsource/roboto": "^5.2.5",
-    "astro": "^5.4.3",
+    "@astrojs/check": "^0.9.8",
+    "@fontsource/roboto": "^5.2.9",
+    "astro": "^6.1.9",
     "astro-takumi": "../../",
     "astro-seo": "^0.8.4",
-    "react": "^19.0.0",
-    "typescript": "^5.8.2"
+    "react": "^19.2.0",
+    "typescript": "^5.9.3"
   }
 }

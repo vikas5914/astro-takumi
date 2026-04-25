@@ -21,7 +21,7 @@ export function getImagePath({
 }: {
   url: URL;
   site: URL | undefined;
-  format?: "png" | "webp" | "jpeg" | "avif";
+  format?: "png" | "webp" | "jpeg";
 }): string {
   if (!site) {
     throw new Error(
