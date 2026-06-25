@@ -1,4 +1,5 @@
 import { defineConfig } from "astro/config";
+import * as fs from "node:fs";
 import astroTakumi, { presets } from "astro-takumi";
 
 // https://astro.build/config
