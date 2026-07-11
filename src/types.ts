@@ -1,6 +1,6 @@
 import type { BaseIntegrationHooks } from "astro";
 import type { ReactNode } from "react";
-import type { ConstructRendererOptions, OutputFormat } from "@takumi-rs/core";
+import type { FontLoader, ImageSource, OutputFormat } from "@takumi-rs/core";
 
 export interface IntegrationInput {
   options: PartialIntegrationOptions;
@@ -21,8 +21,23 @@ export interface IntegrationDefaults {
  * IntegrationOptions with some optional properties. This is what we expose to the user. It allows us to
  * merge the defaults with the user's options and ensure that all required properties are present.
  */
-export type PartialIntegrationOptions = Omit<ConstructRendererOptions, "height" | "width"> &
-  Partial<IntegrationDefaults>;
+export type PartialIntegrationOptions = {
+  /**
+   * Fonts to use when rendering. Accepts raw bytes (Buffer/Uint8Array), font descriptors,
+   * URL strings, or lazy loaders — the same shapes Takumi 2 accepts per render.
+   */
+  fonts?: FontLoader[];
+  /**
+   * Pre-supplied images keyed by `src`. Made available to every page render
+   * (replacement for Takumi v1 `persistentImages`).
+   */
+  images?: ImageSource[];
+  /**
+   * Ordered family fallback chain for glyph selection. Defaults to every registered
+   * family in registration order.
+   */
+  fontFamilies?: string[];
+} & Partial<IntegrationDefaults>;
 
 /**
  * The options that we use internally. This ensures that all options are configured, either with something

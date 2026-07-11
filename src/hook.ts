@@ -1,5 +1,5 @@
 import { Renderer } from "@takumi-rs/core";
-import { extractResourceUrls, fetchResources } from "@takumi-rs/helpers";
+import { prepareImages } from "@takumi-rs/helpers";
 import { fromJsx } from "@takumi-rs/helpers/jsx";
 import type { AstroBuildDoneHookInput, IntegrationOptions, Page, RenderFunction } from "./types.js";
 import * as fs from "fs/promises";
@@ -22,11 +22,11 @@ export async function buildDoneHook({
 }) {
   logger.info("Generating Open Graph images using Takumi");
 
-  const renderer = new Renderer({
-    fonts: options.fonts ?? [],
-    persistentImages: options.persistentImages ?? [],
-  });
-  const promises = pages.map((page) => handlePage({ page, options, render, dir, logger, renderer }));
+  // Takumi 2: Renderer takes no constructor args; fonts/images are per-render.
+  const renderer = new Renderer();
+  // Share a byte cache across pages so remote assets are only fetched once.
+  const fetchCache = new Map<string, Promise<ArrayBuffer>>();
+  const promises = pages.map((page) => handlePage({ page, options, render, dir, logger, renderer, fetchCache }));
   await Promise.all(promises);
 }
 
@@ -37,9 +37,10 @@ interface HandlePageInput {
   dir: URL;
   logger: AstroIntegrationLogger;
   renderer: Renderer;
+  fetchCache: Map<string, Promise<ArrayBuffer>>;
 }
 
-async function handlePage({ page, options, render, dir, logger, renderer }: HandlePageInput) {
+async function handlePage({ page, options, render, dir, logger, renderer, fetchCache }: HandlePageInput) {
   // gets the absolute path to the HTML file. E.g. /home/user/project/dist/blog/index.html
   // fileURLToPath() converts the URL to a file path. Without it, the path would start with a leading slash on Windows
   // systems, resulting in an invalid path.
@@ -55,15 +56,27 @@ async function handlePage({ page, options, render, dir, logger, renderer }: Hand
   // render the image using Takumi
   const reactNode = await render({ ...page, ...pageDetails, dir, document });
   const { node, stylesheets } = await fromJsx(reactNode);
-  const fetchedResources = await fetchResources(extractResourceUrls(node));
+  const images = await prepareImages({
+    node,
+    ...(options.images ? { sources: options.images } : {}),
+    fetchCache,
+  });
+
+  // quality is only valid for jpeg / lossy webp in Takumi 2's format union
+  const formatOptions =
+    options.format === "jpeg" || options.format === "webp"
+      ? ({ format: options.format, quality: options.quality } as const)
+      : ({ format: options.format } as const);
+
   const imageBuffer = await renderer.render(node, {
     width: options.width,
     height: options.height,
-    format: options.format,
-    quality: options.quality,
+    ...formatOptions,
     drawDebugBorder: options.drawDebugBorder,
     stylesheets,
-    fetchedResources,
+    images,
+    ...(options.fonts ? { fonts: options.fonts } : {}),
+    ...(options.fontFamilies ? { fontFamilies: options.fontFamilies } : {}),
   });
 
   // save the image file. The file name is the same as the HTML file, but with the appropriate extension.

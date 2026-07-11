@@ -1,5 +1,43 @@
 # Changelog
 
+## v2.0.0 (2026-07-11)
+
+### Breaking Changes
+
+- Upgrade to [Takumi 2.0](https://takumi.kane.tw/docs/upgrade/v2) (`@takumi-rs/core` / `@takumi-rs/helpers` `^2.0.2`).
+- `options.persistentImages` is removed. Use `options.images` (pre-fetched `{ src, data }` entries available on every page render).
+- Integration options no longer extend Takumi's removed `ConstructRendererOptions`. Options are now explicit: `fonts`, `images`, `fontFamilies`, plus size/format/quality/verbose/debug flags.
+- CSS defaults in Takumi 2 changed to match the web platform (e.g. `position` default is `static`, border width default is `medium`). Custom renderers may need small style tweaks; verify images visually.
+
+### Migration
+
+Most users only pass `fonts` as `Buffer`s and a `render` function — that still works:
+
+```ts
+astroTakumi({
+  options: {
+    fonts: [fs.readFileSync("path/to/font.woff")],
+  },
+  render: presets.blackAndWhite,
+});
+```
+
+If you used `persistentImages`:
+
+```diff
+- persistentImages: [{ src: "https://example.com/logo.png", data: logoBytes }],
++ images: [{ src: "https://example.com/logo.png", data: logoBytes }],
+```
+
+### Fixes
+
+- Replace the `brandedLogo` preset's complex path-outlined wordmark with a simple SVG mark + text. Takumi 2 was rasterizing the old multi-subpath evenodd logo as a garbled "prisnnl" wordmark.
+
+### Internal
+
+- `Renderer` is constructed with no args; fonts and images are passed per `render()` call.
+- Replaced `extractResourceUrls` + `fetchResources` with `prepareImages`, sharing a fetch cache across pages.
+
 ## v1.1.13 (2026-06-25)
 
 - feat: update takumi and astro dependencies

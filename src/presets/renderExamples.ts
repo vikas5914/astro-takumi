@@ -1,5 +1,5 @@
 import { Renderer } from "@takumi-rs/core";
-import { extractResourceUrls, fetchResources } from "@takumi-rs/helpers";
+import { prepareImages } from "@takumi-rs/helpers";
 import { fromJsx } from "@takumi-rs/helpers/jsx";
 import { presets } from "./index.js";
 import * as fs from "fs/promises";
@@ -30,21 +30,21 @@ async function renderExamples() {
     document,
   };
 
-  const renderer = new Renderer({
-    fonts: [await fs.readFile("node_modules/@fontsource/roboto/files/roboto-latin-400-normal.woff")],
-  });
+  const renderer = new Renderer();
+  const fonts = [await fs.readFile("node_modules/@fontsource/roboto/files/roboto-latin-400-normal.woff")];
+  const fetchCache = new Map<string, Promise<ArrayBuffer>>();
 
   const promises = Object.entries(presets).map(async ([name, preset]) => {
     const reactNode = await preset(page);
     const { node, stylesheets } = await fromJsx(reactNode);
-    const fetchedResources = await fetchResources(extractResourceUrls(node));
+    const images = await prepareImages({ node, fetchCache });
     const png = await renderer.render(node, {
       width: 1200,
       height: 630,
       format: "png",
-      quality: 100,
       stylesheets,
-      fetchedResources,
+      fonts,
+      images,
     });
     const target = `assets/presets/${name}.png`;
     await fs.writeFile(target, png);

@@ -25,7 +25,7 @@ You've probably seen this in action when posting a link on Facebook, Twitter, Sl
 - Use a preset renderer to get started quickly.
 - Images are fully customizable using [Takumi](https://github.com/kane50613/takumi).
 - **Built-in Tailwind CSS support** - Use `tw` prop directly in JSX.
-- Multiple output formats: PNG, WebP, JPEG, AVIF.
+- Multiple output formats: PNG, WebP, JPEG.
 - Use React/JSX + Tailwind syntax or vanilla JavaScript to define your own custom images.
 - Supports both static pages and Astro content collections.
 - Pages can be written in Markdown, MDX, HTML, or any other format.
@@ -208,11 +208,11 @@ astroTakumi({
     width: 1200,
     height: 630,
     
-    // Output format: "png" | "webp" | "jpeg" | "avif" (default: "png")
+    // Output format: "png" | "webp" | "jpeg" | "ico" | "raw" (default: "png")
     // WebP is recommended for better compression
     format: "webp",
     
-    // Image quality 0-100 (default: 100)
+    // Image quality 0-100 for jpeg/lossy webp (default: 100)
     quality: 90,
     
     // Enable debug borders to troubleshoot layouts (default: false)
@@ -220,6 +220,12 @@ astroTakumi({
     
     // Log each generated image (default: false)
     verbose: true,
+
+    // Optional: pre-supplied images available to every page render
+    // images: [{ src: "https://example.com/logo.png", data: logoBytes }],
+
+    // Optional: ordered font-family fallback chain
+    // fontFamilies: ["Roboto"],
   },
   render: presets.blackAndWhite,
 });
