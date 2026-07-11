@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.0.1 (2026-07-11)
+
+- docs: note 2.0.0 as the Takumi 2 major release line
+
 ## v2.0.0 (2026-07-11)
 
 > Published as the Takumi 2 major line. Prefer `^2.0.0` over the mistaken `1.1.14` patch that also contains these changes.
