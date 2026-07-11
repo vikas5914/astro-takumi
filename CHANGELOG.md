@@ -1,19 +1,5 @@
 # Changelog
 
-## v1.1.14 (2026-07-11)
-
-- feat!: upgrade to Takumi 2.0
-- build(deps): bump the all-dependencies group with 3 updates (#136)
-- build(deps): bump the all-dependencies group with 4 updates (#135)
-- build(deps): bump the all-dependencies group with 4 updates (#134)
-- build(deps-dev): bump typescript-eslint in the all-dependencies group (#133)
-- build(deps-dev): bump vitest in the all-dependencies group (#132)
-- build(deps-dev): bump astro in the all-dependencies group (#131)
-- build(deps-dev): bump the all-dependencies group with 2 updates (#130)
-- build(deps-dev): bump astro in the all-dependencies group (#129)
-- build(deps-dev): bump the all-dependencies group with 4 updates (#128)
-- build(deps-dev): bump the all-dependencies group with 2 updates (#127)
-
 ## v2.0.0 (2026-07-11)
 
 ### Breaking Changes
