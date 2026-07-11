@@ -2,6 +2,8 @@
 
 ## v2.0.0 (2026-07-11)
 
+> Published as the Takumi 2 major line. Prefer `^2.0.0` over the mistaken `1.1.14` patch that also contains these changes.
+
 ### Breaking Changes
 
 - Upgrade to [Takumi 2.0](https://takumi.kane.tw/docs/upgrade/v2) (`@takumi-rs/core` / `@takumi-rs/helpers` `^2.0.2`).
