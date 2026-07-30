@@ -56,6 +56,37 @@ test("getFilePath blog", async () => {
   expect(normalize(result)).toBe(normalize("blog/index.html"));
 });
 
+// Astro build.format: 'file' + trailingSlash: 'never' → pathnames without a
+// trailing slash (e.g. "docs/getting-started"), HTML at docs/getting-started.html.
+// Current getFilePath uses page.slice(0, -1), which drops a real character when
+// there is no trailing slash ("getting-starte.html") and the build fails with ENOENT.
+test("getFilePath file format nested page without trailing slash", async () => {
+  const tmpDir = await createTempDir();
+  process.chdir(tmpDir);
+
+  await mkdir(join(tmpDir, "docs"));
+  await writeFile(join(tmpDir, "docs", "getting-started.html"), "");
+
+  const result = getFilePath({ dir: "", page: "docs/getting-started" });
+
+  process.chdir(__dirname);
+
+  expect(normalize(result)).toBe(normalize("docs/getting-started.html"));
+});
+
+test("getFilePath file format root index without trailing slash", async () => {
+  const tmpDir = await createTempDir();
+  process.chdir(tmpDir);
+
+  await writeFile(join(tmpDir, "index.html"), "");
+
+  const result = getFilePath({ dir: "", page: "" });
+
+  process.chdir(__dirname);
+
+  expect(normalize(result)).toBe(normalize("index.html"));
+});
+
 // https://sdorra.dev/posts/2024-02-12-vitest-tmpdir
 async function createTempDir() {
   const ostmpdir = tmpdir();
