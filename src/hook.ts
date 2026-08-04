@@ -91,7 +91,7 @@ async function handlePage({ page, options, render, dir, logger, renderer, fetchC
   const imageUrl = new URL(pageDetails.image).pathname.slice(1);
 
   // check that the og:image property matches the sitePath
-  if (imageUrl !== relativeImageFile) {
+  if (decodeURIComponent(imageUrl) !== relativeImageFile) {
     throw new Error(
       `The og:image property in ${htmlFile} (${imageUrl}) does not match the generated image (${relativeImageFile}).`,
     );
