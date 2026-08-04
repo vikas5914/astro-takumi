@@ -73,7 +73,7 @@
     "printWidth": 120
   },
   "scripts": {
-    "prepare": "husky",
+    "prepare": "tsc",
     "lint": "eslint src --cache",
     "build": "tsc",
     "watch": "tsc -w",
