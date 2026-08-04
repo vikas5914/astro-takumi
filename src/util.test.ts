@@ -61,7 +61,15 @@ test("decodeURIComponent path matching with special characters", () => {
   const imageUrl = new URL(ogImageUrl).pathname.slice(1);
   const relativeImageFile = "archive/category/App & Tools/index.webp";
 
-  expect(decodeURIComponent(imageUrl)).toBe(decodeURIComponent(relativeImageFile));
+  expect(decodeURIComponent(imageUrl)).toBe(relativeImageFile);
+});
+
+test("decodeURIComponent path matching with literal %XX in local filename", () => {
+  const ogImageUrl = "https://example.com/archive/100%25%20discount/index.webp";
+  const imageUrl = new URL(ogImageUrl).pathname.slice(1);
+  const relativeImageFile = "archive/100% discount/index.webp";
+
+  expect(decodeURIComponent(imageUrl)).toBe(relativeImageFile);
 });
 
 // https://sdorra.dev/posts/2024-02-12-vitest-tmpdir
