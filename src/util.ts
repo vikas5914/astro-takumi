@@ -3,15 +3,27 @@ import path from "path";
 
 // some files, e.g. index or 404 pages, are served without a folder
 // other files, e.g. blog posts, are served from a folder
-// I don't fully understand how Astro decides this, so:
+// with `build.format: 'file'`, pages are written as `page.html` instead of `page/index.html`
+// and the pathname has no trailing slash, so:
+// 1. prefer directory-style output: …/page/index.html
+// 2. fall back to file-style output: …/page.html
 export function getFilePath({ dir, page }: { dir: string; page: string }) {
-  let target: string = path.join(dir, page, "index.html");
+  // the pathname may have a trailing slash (directory format) or not (file format)
+  const withoutSlashes = page.replace(/^\/+|\/+$/g, "");
 
-  if (!fs.existsSync(target)) {
-    target = path.join(dir, page.slice(0, -1) + ".html");
+  // for the site root, this is just `dir/index.html`
+  const target = path.join(dir, withoutSlashes, "index.html");
+
+  if (fs.existsSync(target)) {
+    return target;
   }
 
-  return target;
+  // the site root always maps to index.html
+  if (withoutSlashes === "") {
+    return target;
+  }
+
+  return path.join(dir, `${withoutSlashes}.html`);
 }
 
 export function getImagePath({

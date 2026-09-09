@@ -96,7 +96,9 @@ async function handlePage({ page, options, render, dir, logger, renderer, fetchC
   const relativeImageFile = path.relative(fileURLToPath(dir), imageFile).replace(/\\/g, "/");
 
   // convert the image path to a URL and remove the leading slash
-  const imageUrl = new URL(pageDetails.image).pathname.slice(1);
+  // the og:image URL is percent-encoded (e.g. spaces become %20), while the generated
+  // image file path on disk is not, so decode it before comparing
+  const imageUrl = decodeURIComponent(new URL(pageDetails.image).pathname).slice(1);
 
   // check that the og:image property matches the sitePath
   if (imageUrl !== relativeImageFile) {

@@ -56,6 +56,43 @@ test("getFilePath blog", async () => {
   expect(normalize(result)).toBe(normalize("blog/index.html"));
 });
 
+// Astro build.format: 'file' + trailingSlash: 'never' → pathnames without a
+// trailing slash (e.g. "docs/getting-started"), HTML at docs/getting-started.html.
+// getFilePath must not mangle the last path character (previously "getting-starte.html")
+// https://github.com/vikas5914/astro-takumi/issues/159
+test("getFilePath file format nested page without trailing slash", async () => {
+  const tmpDir = await createTempDir();
+
+  // change the current working directory to the temp dir
+  process.chdir(tmpDir);
+
+  await mkdir(join(tmpDir, "docs"));
+  await writeFile(join(tmpDir, "docs", "getting-started.html"), "");
+
+  const result = getFilePath({ dir: "", page: "docs/getting-started" });
+
+  // change the current working directory back to the original
+  process.chdir(__dirname);
+
+  expect(normalize(result)).toBe(normalize("docs/getting-started.html"));
+});
+
+test("getFilePath file format root index without trailing slash", async () => {
+  const tmpDir = await createTempDir();
+
+  // change the current working directory to the temp dir
+  process.chdir(tmpDir);
+
+  await writeFile(join(tmpDir, "index.html"), "");
+
+  const result = getFilePath({ dir: "", page: "" });
+
+  // change the current working directory back to the original
+  process.chdir(__dirname);
+
+  expect(normalize(result)).toBe(normalize("index.html"));
+});
+
 // https://sdorra.dev/posts/2024-02-12-vitest-tmpdir
 async function createTempDir() {
   const ostmpdir = tmpdir();
