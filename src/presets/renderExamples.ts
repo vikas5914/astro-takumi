@@ -36,13 +36,13 @@ async function renderExamples() {
 
   const promises = Object.entries(presets).map(async ([name, preset]) => {
     const reactNode = await preset(page);
-    const { node, stylesheets } = await fromJsx(reactNode);
+    const { node, css } = await fromJsx(reactNode);
     const images = await prepareImages({ node, fetchCache });
     const png = await renderer.render(node, {
       width: 1200,
       height: 630,
       format: "png",
-      stylesheets,
+      css,
       fonts,
       images,
     });

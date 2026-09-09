@@ -1,5 +1,7 @@
 import { Renderer } from "@takumi-rs/core";
+import type { ImageSource, RenderOptions } from "@takumi-rs/core";
 import { prepareImages } from "@takumi-rs/helpers";
+import type { PrepareImagesOptions } from "@takumi-rs/helpers";
 import { fromJsx } from "@takumi-rs/helpers/jsx";
 import type { AstroBuildDoneHookInput, IntegrationOptions, Page, RenderFunction } from "./types.js";
 import * as fs from "fs/promises";
@@ -22,7 +24,7 @@ export async function buildDoneHook({
 }) {
   logger.info("Generating Open Graph images using Takumi");
 
-  // Takumi 2: Renderer takes no constructor args; fonts/images are per-render.
+  // Takumi 2: fonts/images are supplied per render, so the renderer needs no constructor setup.
   const renderer = new Renderer();
   // Share a byte cache across pages so remote assets are only fetched once.
   const fetchCache = new Map<string, Promise<ArrayBuffer>>();
@@ -55,12 +57,13 @@ async function handlePage({ page, options, render, dir, logger, renderer, fetchC
 
   // render the image using Takumi
   const reactNode = await render({ ...page, ...pageDetails, dir, document });
-  const { node, stylesheets } = await fromJsx(reactNode);
-  const images = await prepareImages({
-    node,
-    ...(options.images ? { sources: options.images } : {}),
-    fetchCache,
-  });
+  const { node, css } = await fromJsx(reactNode);
+
+  const prepareImagesOptions: PrepareImagesOptions<ImageSource> = { node, fetchCache };
+  if (options.images) {
+    prepareImagesOptions.sources = options.images;
+  }
+  const images = await prepareImages(prepareImagesOptions);
 
   // quality is only valid for jpeg / lossy webp in Takumi 2's format union
   const formatOptions =
@@ -68,16 +71,21 @@ async function handlePage({ page, options, render, dir, logger, renderer, fetchC
       ? ({ format: options.format, quality: options.quality } as const)
       : ({ format: options.format } as const);
 
-  const imageBuffer = await renderer.render(node, {
+  const renderOptions: RenderOptions = {
     width: options.width,
     height: options.height,
     ...formatOptions,
     drawDebugBorder: options.drawDebugBorder,
-    stylesheets,
+    css,
     images,
-    ...(options.fonts ? { fonts: options.fonts } : {}),
-    ...(options.fontFamilies ? { fontFamilies: options.fontFamilies } : {}),
-  });
+  };
+  if (options.fonts) {
+    renderOptions.fonts = options.fonts;
+  }
+  if (options.fontFamilies) {
+    renderOptions.fontFamilies = options.fontFamilies;
+  }
+  const imageBuffer = await renderer.render(node, renderOptions);
 
   // save the image file. The file name is the same as the HTML file, but with the appropriate extension.
   const imageFile = htmlFile.replace(/\.html$/, `.${options.format}`);

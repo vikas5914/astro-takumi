@@ -1,5 +1,4 @@
 node_modules
 dist
-.eslintcache
 *.afphoto~lock~
 .DS_Store
