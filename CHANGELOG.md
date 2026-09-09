@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.0.3 (2026-09-09)
+
+- fix: support file build format and special characters in paths
+
 ## v2.0.2 (2026-09-09)
 
 - chore: update deps and replace eslint with oxlint
