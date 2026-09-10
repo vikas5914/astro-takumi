@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.0.4 (2026-09-10)
+
+- chore: update dependencies to fix security vulnerabilities
+
 ## v2.0.3 (2026-09-09)
 
 - fix: support file build format and special characters in paths
