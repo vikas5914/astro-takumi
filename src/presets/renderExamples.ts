@@ -37,6 +37,8 @@ async function renderExamples() {
   const promises = Object.entries(presets).map(async ([name, preset]) => {
     const reactNode = await preset(page);
     const { node, css } = await fromJsx(reactNode);
+    // `Renderer.prepare` does not exist in @takumi-rs/core 2.x yet, so keep the helper until Takumi 3.
+    // oxlint-disable-next-line typescript/no-deprecated
     const images = await prepareImages({ node, fetchCache });
     const png = await renderer.render(node, {
       width: 1200,

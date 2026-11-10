@@ -7,6 +7,9 @@ export interface IntegrationInput {
   render: RenderFunction;
 }
 
+/** The HTML parser used to build the DOM handed to render functions. */
+export type DomBackend = "jsdom" | "linkedom" | "happy-dom";
+
 /** When applied to PartialIntegrationOptions this type equals IntegrationOptions */
 export interface IntegrationDefaults {
   width: number;
@@ -15,6 +18,7 @@ export interface IntegrationDefaults {
   quality: number;
   verbose: boolean;
   drawDebugBorder: boolean;
+  domBackend: DomBackend;
 }
 
 /**
@@ -37,6 +41,12 @@ export type PartialIntegrationOptions = {
    * family in registration order.
    */
   fontFamilies?: string[];
+  /**
+   * DOM implementation used to parse each page before it is passed to a render
+   * function. Defaults to `"jsdom"`. The `"linkedom"` and `"happy-dom"` backends
+   * are optional peer dependencies and must be installed by the user.
+   */
+  domBackend?: DomBackend;
 } & Partial<IntegrationDefaults>;
 
 /**

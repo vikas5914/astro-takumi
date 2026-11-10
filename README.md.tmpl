@@ -27,6 +27,7 @@ You've probably seen this in action when posting a link on Facebook, Twitter, Sl
 - **Built-in Tailwind CSS support** - Use `tw` prop directly in JSX.
 - Multiple output formats: PNG, WebP, JPEG.
 - Use React/JSX + Tailwind syntax or vanilla JavaScript to define your own custom images.
+- Pluggable DOM backends: jsdom by default, with optional linkedom and happy-dom support.
 - Supports both static pages and Astro content collections.
 - Pages can be written in Markdown, MDX, HTML, or any other format.
 
@@ -226,10 +227,46 @@ astroTakumi({
 
     // Optional: ordered font-family fallback chain
     // fontFamilies: ["Roboto"],
+
+    // DOM implementation used to parse pages: "jsdom" | "linkedom" | "happy-dom"
+    // (default: "jsdom"). linkedom and happy-dom are optional peer dependencies.
+    domBackend: "linkedom",
   },
   render: presets.blackAndWhite,
 });
 ```
+
+### DOM Backends
+
+Each page is parsed into a DOM before it is passed to your render function. By default this uses [jsdom](https://github.com/jsdom/jsdom). You can switch to [linkedom](https://github.com/WebReflection/linkedom) or [happy-dom](https://github.com/capricorn86/happy-dom), which are optional peer dependencies:
+
+```bash
+npm i -D linkedom
+```
+
+```diff
+ astroTakumi({
+-  render: presets.blackAndWhite,
++  options: {
++    domBackend: "linkedom",
++  },
++  render: presets.blackAndWhite,
+ })
+```
+
+The backend only needs to support the DOM APIs your render function uses. All presets and the built-in Open Graph extraction work with every backend.
+
+#### DOM Backend Performance
+
+Run `npm run bench` to reproduce the comparison. It parses and extracts the same 500-post page with each backend. The numbers below are from a local run and will vary by machine; higher throughput and lower latency are better:
+
+| Backend           | Median latency | Throughput |
+| ----------------- | -------------- | ---------- |
+| `jsdom` (default) | ~11.5 ms       | ~81 ops/s  |
+| `linkedom`        | ~1.9 ms        | ~517 ops/s |
+| `happy-dom`       | ~7.7 ms        | ~109 ops/s |
+
+`linkedom` is consistently the fastest option here, roughly 4x faster than `jsdom`. `happy-dom` has a lower median latency than `jsdom` in this workload but higher variance, so switch to it for compatibility rather than speed.
 
 ### Using WebP Format
 
@@ -272,7 +309,7 @@ If you're using this project, [open a PR](https://github.com/vikas5914/astro-tak
 
 You can create your own custom images with a render function. Take a look at how [a preset](https://github.com/vikas5914/astro-takumi/blob/main/src/presets/blackAndWhite.tsx) works.
 
-Renderers have access to the page's DOM using [jsdom](https://github.com/jsdom/jsdom). You can use this to render your Open Graph image using any of the content from the associated HTML page. An example of this is shown in the [custom property preset](https://github.com/vikas5914/astro-takumi/blob/main/src/presets/customProperty.tsx) which shows a preview of the page's body text in the Open Graph image.
+Renderers have access to the page's DOM using [jsdom](https://github.com/jsdom/jsdom) by default, or whichever [`domBackend`](#dom-backends) you configure. You can use this to render your Open Graph image using any of the content from the associated HTML page. An example of this is shown in the [custom property preset](https://github.com/vikas5914/astro-takumi/blob/main/src/presets/customProperty.tsx) which shows a preview of the page's body text in the Open Graph image.
 
 This library uses [Takumi](https://github.com/kane50613/takumi) to render React/JSX directly to images.
 

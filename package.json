@@ -28,11 +28,15 @@
     "@types/node": "^26.5.1",
     "@types/react": "^19.3.0",
     "astro": "^7.3.2",
+    "happy-dom": "^21.0.4",
     "husky": "^9.1.7",
+    "linkedom": "^0.18.15",
     "lint-staged": "^17.5.0",
     "oxlint": "1.92.0",
     "oxlint-tsgolint": "7.0.2006",
     "prettier": "^3.9.6",
+    "tinybench": "^6.2.3",
+    "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "vitest": "^5.0.0"
   },
@@ -80,8 +84,21 @@
     "test": "vitest",
     "generate:presets": "mkdir -p assets/presets && npx tsx src/presets/renderExamples.ts",
     "generate:readme": "./generate_readme.sh",
-    "examples:build": "npm run build && npm run build --prefix examples/preset && npm run build --prefix examples/custom"
+    "examples:build": "npm run build && npm run build --prefix examples/preset && npm run build --prefix examples/custom",
+    "bench": "tsx src/dom.bench.ts"
   },
   "type": "module",
-  "types": "dist/index.d.ts"
+  "types": "dist/index.d.ts",
+  "peerDependencies": {
+    "happy-dom": "^21.0.4",
+    "linkedom": "^0.18.15"
+  },
+  "peerDependenciesMeta": {
+    "linkedom": {
+      "optional": true
+    },
+    "happy-dom": {
+      "optional": true
+    }
+  }
 }

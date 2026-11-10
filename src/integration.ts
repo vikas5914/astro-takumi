@@ -9,6 +9,7 @@ const defaults: IntegrationDefaults = {
   quality: 100,
   verbose: false,
   drawDebugBorder: false,
+  domBackend: "jsdom",
 };
 
 export function astroTakumi({ options, render }: IntegrationInput): AstroIntegration {
