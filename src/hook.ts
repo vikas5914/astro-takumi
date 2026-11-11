@@ -9,7 +9,7 @@ import type { AstroIntegrationLogger } from "astro";
 import { extract, sanitizeHtml } from "./extract.js";
 import { getFilePath } from "./util.js";
 import { fileURLToPath } from "url";
-import * as jsdom from "jsdom";
+import { createDocument } from "./dom.js";
 import path from "path";
 
 export async function buildDoneHook({
@@ -48,9 +48,9 @@ async function handlePage({ page, options, render, dir, logger, renderer, fetchC
   // systems, resulting in an invalid path.
   const htmlFile = getFilePath({ dir: fileURLToPath(dir), page: page.pathname });
 
-  // read the HTML file and parse it with jsdom
+  // read the HTML file and parse it with the configured DOM backend
   const html = (await fs.readFile(htmlFile)).toString();
-  const document = new jsdom.JSDOM(sanitizeHtml(html)).window.document;
+  const document = await createDocument(sanitizeHtml(html), options.domBackend);
 
   // extract the OpenGraph properties from the HTML file
   const pageDetails = extract(document);
@@ -63,6 +63,8 @@ async function handlePage({ page, options, render, dir, logger, renderer, fetchC
   if (options.images) {
     prepareImagesOptions.sources = options.images;
   }
+  // `Renderer.prepare` does not exist in @takumi-rs/core 2.x yet, so keep the helper until Takumi 3.
+  // oxlint-disable-next-line typescript/no-deprecated
   const images = await prepareImages(prepareImagesOptions);
 
   // quality is only valid for jpeg / lossy webp in Takumi 2's format union
