@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import type { FontLoader, ImageSource, OutputFormat } from "@takumi-rs/core";
 
 export interface IntegrationInput {
-  options: PartialIntegrationOptions;
+  options?: PartialIntegrationOptions;
   render: RenderFunction;
 }
 
@@ -23,12 +23,14 @@ export interface IntegrationDefaults {
 
 /**
  * IntegrationOptions with some optional properties. This is what we expose to the user. It allows us to
- * merge the defaults with the user's options and ensure that all required properties are present.
+ * merge the defaults with the user's options and ensure all required properties are present.
  */
 export type PartialIntegrationOptions = {
   /**
    * Fonts to use when rendering. Accepts raw bytes (Buffer/Uint8Array), font descriptors,
    * URL strings, or lazy loaders — the same shapes Takumi 2 accepts per render.
+   * When the installed @takumi-rs/core exposes registerFont(), fonts are registered once
+   * per build instead of being re-supplied on every render call.
    */
   fonts?: FontLoader[];
   /**
@@ -43,10 +45,27 @@ export type PartialIntegrationOptions = {
   fontFamilies?: string[];
   /**
    * DOM implementation used to parse each page before it is passed to a render
-   * function. Defaults to `"jsdom"`. The `"linkedom"` and `"happy-dom"` backends
-   * are optional peer dependencies and must be installed by the user.
+   * function. Defaults to `"linkedom"` (≈4-6x faster than jsdom per the repo bench);
+   * `"jsdom"` and `"happy-dom"` remain available as optional peer deps.
    */
   domBackend?: DomBackend;
+  /**
+   * Content-hash cache: skip re-rendering pages whose HTML bytes are unchanged.
+   * Default: true. Disable with `cache: false`.
+   */
+  cache?: boolean;
+  /** Cache directory. Default: <project root>/node_modules/.cache/astro-takumi */
+  cacheDir?: string;
+  /**
+   * Speculatively pre-render from previous-build HTML snapshots during the Vite
+   * phase, so cache hits are already on disk when astro:build:done runs.
+   * Default: false.
+   */
+  speculative?: boolean;
+  /** Max concurrent page renders. Default: min(8, availableParallelism). */
+  concurrency?: number;
+  /** Skip pages matching these substrings or regexes (pathname). */
+  exclude?: (string | RegExp)[];
 } & Partial<IntegrationDefaults>;
 
 /**
@@ -62,6 +81,9 @@ export interface Page {
 
 /** The input Astro passes to the build done hook */
 export type AstroBuildDoneHookInput = Parameters<BaseIntegrationHooks["astro:build:done"]>[0];
+
+/** The input Astro passes to the build start hook */
+export type AstroBuildStartHookInput = Parameters<BaseIntegrationHooks["astro:build:start"]>[0];
 
 /** The input arguments to a `RenderFunction` */
 export type RenderFunctionInput = {
