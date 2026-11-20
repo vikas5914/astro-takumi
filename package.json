@@ -1,6 +1,6 @@
 {
-  "name": "astro-takumi",
-  "version": "2.0.4",
+  "name": "@elcoosp/astro-takumi",
+  "version": "2.1.2",
   "author": {
     "name": "Vikas Kapadiya",
     "email": "vikas@kapadiya.net",
@@ -8,13 +8,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vikas5914/astro-takumi.git"
+    "url": "git+https://github.com/elcoosp/astro-takumi.git"
   },
   "main": "dist/index.js",
   "dependencies": {
     "@takumi-rs/core": "^2.13.7",
     "@takumi-rs/helpers": "^2.13.7",
-    "jsdom": "^31.0.0",
     "react": "^19.3.0"
   },
   "devDependencies": {
@@ -28,16 +27,21 @@
     "@types/node": "^26.5.1",
     "@types/react": "^19.3.0",
     "astro": "^7.3.2",
+    "happy-dom": "^21.0.4",
     "husky": "^9.1.7",
+    "linkedom": "^0.18.15",
     "lint-staged": "^17.5.0",
     "oxlint": "1.94.0",
     "oxlint-tsgolint": "7.0.2007",
     "prettier": "^3.9.6",
+    "tinybench": "^6.2.3",
+    "tsx": "^4.23.15",
     "typescript": "^7.0.2",
-    "vitest": "^5.0.0"
+    "vitest": "^5.0.0",
+    "jsdom": ">=26.0.0"
   },
   "bugs": {
-    "url": "https://github.com/vikas5914/astro-takumi/issues"
+    "url": "https://github.com/elcoosp/astro-takumi/issues"
   },
   "commitlint": {
     "extends": [
@@ -47,14 +51,12 @@
   "description": "Generate Open Graph images for your Astro site using Takumi.",
   "files": [
     "dist",
-    "src",
     "package.json",
     "README.md",
     "LICENSE",
-    "package-lock.json",
     "CHANGELOG.md"
   ],
-  "homepage": "https://github.com/vikas5914/astro-takumi",
+  "homepage": "https://github.com/elcoosp/astro-takumi",
   "keywords": [
     "takumi",
     "astro-takumi",
@@ -73,15 +75,43 @@
     "printWidth": 120
   },
   "scripts": {
-    "prepare": "husky",
+    "prepare": "pnpm build",
     "lint": "oxlint",
     "build": "tsc",
     "watch": "tsc -w",
     "test": "vitest",
     "generate:presets": "mkdir -p assets/presets && npx tsx src/presets/renderExamples.ts",
     "generate:readme": "./generate_readme.sh",
-    "examples:build": "npm run build && npm run build --prefix examples/preset && npm run build --prefix examples/custom"
+    "examples:build": "npm run build && npm run build --prefix examples/preset && npm run build --prefix examples/custom",
+    "bench": "tsx src/dom.bench.ts",
+    "prepublishOnly": "pnpm build"
   },
   "type": "module",
-  "types": "dist/index.d.ts"
+  "types": "dist/index.d.ts",
+  "peerDependencies": {
+    "happy-dom": "^21.0.4",
+    "linkedom": "^0.18.15",
+    "jsdom": ">=26.0.0"
+  },
+  "peerDependenciesMeta": {
+    "linkedom": {
+      "optional": true
+    },
+    "happy-dom": {
+      "optional": true
+    },
+    "jsdom": {
+      "optional": true
+    }
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "packageManager": "pnpm@12.18.0",
+  "engines": {
+    "node": ">=20"
+  }
 }

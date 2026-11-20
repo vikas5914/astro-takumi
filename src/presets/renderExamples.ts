@@ -5,7 +5,6 @@ import { presets } from "./index.js";
 import * as fs from "fs/promises";
 import type { RenderFunctionInput } from "../types.js";
 import { getFilePath } from "../util.js";
-import * as jsdom from "jsdom";
 import { sanitizeHtml } from "../extract.js";
 import { fileURLToPath } from "url";
 
@@ -17,7 +16,8 @@ async function renderExamples() {
 
   const htmlFile = getFilePath({ dir: fileURLToPath(dir), page: pathname });
   const html = (await fs.readFile(htmlFile)).toString();
-  const document = new jsdom.JSDOM(sanitizeHtml(html)).window.document;
+  const { JSDOM } = await import("jsdom");
+  const document = new JSDOM(sanitizeHtml(html)).window.document;
 
   const page: RenderFunctionInput = {
     title: "3D Graphics with OpenGL",
@@ -37,6 +37,8 @@ async function renderExamples() {
   const promises = Object.entries(presets).map(async ([name, preset]) => {
     const reactNode = await preset(page);
     const { node, css } = await fromJsx(reactNode);
+    // `Renderer.prepare` does not exist in @takumi-rs/core 2.x yet, so keep the helper until Takumi 3.
+    // oxlint-disable-next-line typescript/no-deprecated
     const images = await prepareImages({ node, fetchCache });
     const png = await renderer.render(node, {
       width: 1200,
