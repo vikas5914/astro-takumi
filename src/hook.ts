@@ -3,7 +3,14 @@ import type { ImageSource, RenderOptions } from "@takumi-rs/core";
 import { prepareImages } from "@takumi-rs/helpers";
 import type { PrepareImagesOptions } from "@takumi-rs/helpers";
 import { fromJsx } from "@takumi-rs/helpers/jsx";
-import type { AstroBuildDoneHookInput, IntegrationOptions, Page, RenderFunction } from "./types.js";
+import type {
+  AstroBuildDoneHookInput,
+  IntegrationOptions,
+  Page,
+  PageDetails,
+  RenderFunction,
+  RenderFunctionInput,
+} from "./types.js";
 import * as fs from "fs/promises";
 import type { AstroIntegrationLogger } from "astro";
 import { extract, sanitizeHtml } from "./extract.js";
@@ -42,21 +49,45 @@ interface HandlePageInput {
   fetchCache: Map<string, Promise<ArrayBuffer>>;
 }
 
+interface RenderInputFactoryInput {
+  page: Page;
+  pageDetails: PageDetails;
+  dir: URL;
+  html: string;
+}
+
+// Build the RenderFunctionInput for a page, exposing `document` as a lazily-built,
+// per-page cached jsdom document. The jsdom DOM — and the sanitizeHtml pass it
+// needs — is constructed only when a render function reads `document`; presets
+// that never touch the DOM skip it entirely. The public RenderFunctionInput
+// type is unchanged (a getter satisfies `document: Document`).
+export function buildRenderInput({ page, pageDetails, dir, html }: RenderInputFactoryInput): RenderFunctionInput {
+  let cachedDocument: Document | undefined;
+  return {
+    ...page,
+    ...pageDetails,
+    dir,
+    get document() {
+      cachedDocument ??= new jsdom.JSDOM(sanitizeHtml(html)).window.document;
+      return cachedDocument;
+    },
+  };
+}
+
 async function handlePage({ page, options, render, dir, logger, renderer, fetchCache }: HandlePageInput) {
   // gets the absolute path to the HTML file. E.g. /home/user/project/dist/blog/index.html
   // fileURLToPath() converts the URL to a file path. Without it, the path would start with a leading slash on Windows
   // systems, resulting in an invalid path.
   const htmlFile = getFilePath({ dir: fileURLToPath(dir), page: page.pathname });
 
-  // read the HTML file and parse it with jsdom
+  // read the HTML file
   const html = (await fs.readFile(htmlFile)).toString();
-  const document = new jsdom.JSDOM(sanitizeHtml(html)).window.document;
 
   // extract the OpenGraph properties from the HTML file
-  const pageDetails = extract(document);
+  const pageDetails = extract(html);
 
   // render the image using Takumi
-  const reactNode = await render({ ...page, ...pageDetails, dir, document });
+  const reactNode = await render(buildRenderInput({ page, pageDetails, dir, html }));
   const { node, css } = await fromJsx(reactNode);
 
   const prepareImagesOptions: PrepareImagesOptions<ImageSource> = { node, fetchCache };
